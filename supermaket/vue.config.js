@@ -1,17 +1,3 @@
-// module.exports = {
-//   configureWebpack: {
-//     resolve: {
-//       extensions: ['.js', '.vue', '.json'],
-//       alias: {
-//         'assets': 'src/assets',
-//         'components': 'src/components',
-//         'views': 'src/views',
-//         'network': 'src/network',
-//         'common': 'src/common'
-//       }
-//     },
-//   }
-// }
 const path = require('path');
 
 function resolve(dir) {
