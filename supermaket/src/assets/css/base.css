@@ -1,0 +1,23 @@
+@import './normalize.css';
+
+:root {
+  --color-text: #666;
+  --color-high-text: #ff5777;
+  --color-tint: #ff8198;
+  --color-background: #fff;
+  --font-size: 14px;
+  --line-height: 1.5;
+}
+
+*, *::after, *::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-background);
+  user-select: none;/* 禁止用户再页面上选中文字/图片等 */
+  color: var(--color-text);
+  font-family:"Helvetica Neue",Helvetica,"PingFang Sc","Hiragino Sans GB","MicrosoftYaHei","微软雅黑",Arial,sans-serif;
+}
