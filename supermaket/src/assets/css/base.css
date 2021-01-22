@@ -21,3 +21,10 @@ body {
   color: var(--color-text);
   font-family:"Helvetica Neue",Helvetica,"PingFang Sc","Hiragino Sans GB","MicrosoftYaHei","微软雅黑",Arial,sans-serif;
 }
+
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
