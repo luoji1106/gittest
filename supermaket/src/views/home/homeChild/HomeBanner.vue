@@ -1,0 +1,35 @@
+<template>
+  <swiper>
+    <swiper-item v-for="item in banners" :key='item.title'>
+      <a :href="item.link">
+        <img :src="item.image" alt="">
+      </a>
+    </swiper-item>
+  </swiper>
+</template>
+
+<script>
+  import {Swiper, SwiperItem} from 'components/common/swiper';
+
+	export default {
+    name: "HomeBanner",
+    props: {
+      banners: {
+        type: Array,
+        default: []
+      },
+      recommends: {
+        type: Array,
+        default: []
+      }
+    },
+    components: {
+      Swiper,
+      SwiperItem
+    }
+	}
+</script>
+
+<style scoped>
+  
+</style>
