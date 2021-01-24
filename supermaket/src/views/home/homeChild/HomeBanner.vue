@@ -16,11 +16,9 @@
     props: {
       banners: {
         type: Array,
-        default: []
-      },
-      recommends: {
-        type: Array,
-        default: []
+        default() {
+          return []
+        }
       }
     },
     components: {

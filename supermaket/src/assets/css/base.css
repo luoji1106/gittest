@@ -22,6 +22,11 @@ body {
   font-family:"Helvetica Neue",Helvetica,"PingFang Sc","Hiragino Sans GB","MicrosoftYaHei","微软雅黑",Arial,sans-serif;
 }
 
+a {
+  text-decoration: none;
+  color: #666;
+}
+
 .left {
   float: left;
 }
