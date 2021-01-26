@@ -14,7 +14,7 @@ export function axiosRequest(config) {
     // console.log(config);
     return config;
   },err => {
-    console.log(err);
+    // console.log(err);
   })
 
   // 添加响应拦截器(两个参数都是函数。第一个参数是成功时拦截，第二个是请求失败时拦截)
@@ -22,7 +22,7 @@ export function axiosRequest(config) {
     // console.log(res);
     return res.data;
   },err => {
-    console.log(err);
+    // console.log(err);
   })
 
   return instance(config)

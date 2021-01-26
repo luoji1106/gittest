@@ -1,11 +1,14 @@
 <template>
   <div id="Home">
     <nav-bar class="home-nav"><p slot="center">购物街</p></nav-bar>
-    <home-banner :banners="banner"/>
-    <home-recommend :recommends="recommend"/>
-    <feature/>
-    <tab-control :titles="['流行','新款','精选']"/>
-    <goods-list :goods="goods.pop.list"/>
+    <scroll ref="scroll">
+      <home-banner :banners="banner"/>
+      <home-recommend :recommends="recommend"/>
+      <feature/>
+      <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" />
+      <goods-list :goods="goods[currentType].list"/>
+    </scroll>
+    <scroll-to @click.native="topClick" />
   </div>
 </template>
 
@@ -13,6 +16,8 @@
   import NavBar from 'components/common/navbar/NavBar'
   import TabControl from 'components/content/tabcontrol/TabControl'
   import GoodsList from 'components/content/goods/GoodsList'
+  import Scroll from 'components/common/scroll/Scroll'
+  import ScrollTo from 'components/content/scrollto/ScrollTo'
 
   import HomeBanner from './homeChild/HomeBanner'
   import HomeRecommend from './homeChild/HomeRecommend'
@@ -30,13 +35,16 @@
           'pop': {page: 0, list: []},
           'new': {page: 0, list: []},
           'sell': {page: 0, list: []},
-        }
+        },
+        currentType: 'pop',
       }
     },
     components: {
       NavBar,
       TabControl,
       GoodsList,
+      Scroll,
+      ScrollTo,
       HomeBanner,
       HomeRecommend,
       Feature
@@ -51,6 +59,18 @@
       this.HomeGoods('sell')
     },
     methods: {
+      /* 子传父相关方法 */
+      tabClick(index) {
+        if(index == 0){
+          this.currentType = 'pop';
+        }else if(index == 1){
+          this.currentType = 'new';
+        }else if(index == 2){
+          this.currentType = 'sell';
+        }
+      },
+
+      /* 网络请求相关方法 */
       HomeMultidata() {
         getHomeMultidata().then(res => {
           // 将请求到的数据保存下来
@@ -66,6 +86,11 @@
           this.goods[type].list.push(...res.data.list);
           this.goods[type].page += 1;
         })
+      },
+
+      /* 页面滚动设置相关方法 */
+      topClick() {
+        this.$refs.scroll.scrollToTop(0, 0);
       }
     }
   }
@@ -83,5 +108,8 @@
     right: 0;
     left: 0;
     z-index: 1;
+  }
+  .wrapper{
+    height: calc(100vh - 93px);
   }
 </style>

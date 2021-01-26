@@ -58,6 +58,7 @@
   }
   .goods-info .collect {
     position: relative;
+    z-index: -1;
   }
   .goods-info .collect::before {
     content: '';
