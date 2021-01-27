@@ -1,14 +1,16 @@
 <template>
   <div id="Home">
     <nav-bar class="home-nav"><p slot="center">购物街</p></nav-bar>
-    <scroll ref="scroll">
-      <home-banner :banners="banner"/>
+    <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" ref="tabControlTop"
+                  v-show="controlIsFixed" :class="{'isFixed': controlIsFixed}" @click.native="heightGoto"/>
+    <scroll ref="scroll" :probeType='3' :pullUpLoad='true' @scrollTo="scrollTo" @loadMore="loadMore">
+      <home-banner :banners="banner" @bannerImgLoad="bannerImgLoad"/>
       <home-recommend :recommends="recommend"/>
       <feature/>
-      <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" />
+      <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" ref="tabControl"/>
       <goods-list :goods="goods[currentType].list"/>
     </scroll>
-    <scroll-to @click.native="topClick" />
+    <scroll-to @click.native="topClick" v-show="toTopIsShow"/>
   </div>
 </template>
 
@@ -37,6 +39,9 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
+        toTopIsShow: false,
+        controlOffsetTop: null,
+        controlIsFixed: false,
       }
     },
     components: {
@@ -68,6 +73,10 @@
         }else if(index == 2){
           this.currentType = 'sell';
         }
+
+        // 让吸顶的选项卡与原本的选项卡的显示同步
+        this.$refs.tabControl.currentIndex = index;
+        this.$refs.tabControlTop.currentIndex = index;
       },
 
       /* 网络请求相关方法 */
@@ -91,6 +100,28 @@
       /* 页面滚动设置相关方法 */
       topClick() {
         this.$refs.scroll.scrollToTop(0, 0);
+      },
+      bannerImgLoad() {
+        // 获取选项卡距离父元素顶部的距离，并保存下来
+        this.controlOffsetTop = this.$refs.tabControl.$el.offsetTop
+      },
+      scrollTo(position) {
+        // 监听滚动距离判断是否显示'返回顶部按钮'
+        this.toTopIsShow = (-position.y) > 1000;
+        // 监听滚动距离判断选项卡是否需要吸顶
+        this.controlIsFixed = (-position.y) > this.controlOffsetTop ;
+      },
+      heightGoto() {
+        // 当选项卡吸顶时，点击选项卡切换商品类型时，回到顶部
+        this.$refs.scroll.scrollToTop(0, -this.controlOffsetTop);
+      },
+      loadMore() {
+        // 请求更多商品数据添加到网页中
+        this.HomeGoods(this.currentType);
+        // 下拉加载已完成，可以进行下一次下拉加载
+        this.$refs.scroll.finishPullUp();
+        // 加载完成后让better-scroll插件重新计算可滚动的页面长度，防止在图片等信息加载完之前就算好导致滚动问题
+        this.$refs.scroll.refresh();
       }
     }
   }
@@ -98,18 +129,18 @@
 
 <style>
   #Home {
-    padding: 44px 0 49px;
+    padding-bottom: 49px;
   }
   .home-nav {
     background-color: var(--color-tint);
     color: #fff;
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1;
+    z-index: 9;
   }
-  .wrapper{
-    height: calc(100vh - 93px);
+  .isFixed {
+    position: fixed;
+    top: 44px;
+    left: 0;
+    right: 0;
+    z-index: 9;
   }
 </style>

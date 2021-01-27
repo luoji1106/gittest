@@ -40,8 +40,6 @@
     line-height: 40px;
     background-color: #fff;
     font-size: 14px;
-    position: sticky;
-    top: 44px;
   }
 
   .tab-control-item {
