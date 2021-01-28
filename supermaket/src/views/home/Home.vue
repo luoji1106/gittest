@@ -42,6 +42,7 @@
         toTopIsShow: false,
         controlOffsetTop: null,
         controlIsFixed: false,
+        homeScroll: 0,
       }
     },
     components: {
@@ -62,6 +63,16 @@
       this.HomeGoods('pop')
       this.HomeGoods('new')
       this.HomeGoods('sell')
+    },
+    activated () {
+      // 当重新返回home组件页面时，将页面定位到之前离开时的滚动距离
+      this.$refs.scroll.scrollToTop(0, this.homeScroll, 0);
+      // 重新定位之后，刷新一下scroll对象，防止一些问题
+      this.$refs.scroll.refresh();
+    },
+    deactivated () {
+      // 离开home组件时，记录下当前页面滚动的距离
+      this.homeScroll = this.$refs.scroll.scroll.y;
     },
     methods: {
       /* 子传父相关方法 */

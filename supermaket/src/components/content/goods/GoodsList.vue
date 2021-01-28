@@ -1,16 +1,14 @@
 <template>
   <div class="goods">
-    <div v-for="(item, index) in goods" :key="index" class="goods-item">
-      <a :href="item.link">
-        <img :src="item.show.img" alt="">
-        <div class="goods-info">
-          <p class="title">{{item.title}}</p>
-          <p>
-            <span class="price">{{item.price}}</span>
-            <span class="collect">{{item.cfav}}</span>
-          </p>
-        </div>
-      </a>
+    <div v-for="(item, index) in goods" :key="index" class="goods-item" @click="goodsClick(item)">
+      <img :src="item.show.img" alt="">
+      <div class="goods-info">
+        <p class="title">{{item.title}}</p>
+        <p>
+          <span class="price">{{item.price}}</span>
+          <span class="collect">{{item.cfav}}</span>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -25,6 +23,11 @@
         }
       }
     },
+    methods: {
+      goodsClick(item) {
+        this.$router.push('/detail/' + item.iid);
+      }
+    }
   }
 </script>
 
