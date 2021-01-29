@@ -138,7 +138,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   #Home {
     padding-bottom: 49px;
   }
@@ -153,5 +153,10 @@
     left: 0;
     right: 0;
     z-index: 9;
+  }
+
+  .wrapper{
+    height: calc(100vh - 93px);
+    overflow: hidden;
   }
 </style>

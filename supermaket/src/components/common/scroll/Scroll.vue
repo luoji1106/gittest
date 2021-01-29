@@ -62,9 +62,6 @@
   }
 </script>
 
-<style>
-  .wrapper{
-    height: calc(100vh - 93px);
-    overflow: hidden;
-  }
+<style scoped>
+  
 </style>
