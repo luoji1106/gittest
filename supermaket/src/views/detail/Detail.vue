@@ -6,6 +6,7 @@
       <detail-info :goodsInfo="goodsInfo" />
       <detail-shop :shopInfo="shopInfo" />
       <detail-shop-img :goodsImages="goodsImages" @imgLoad="imgLoad"/>
+      <detail-param :paramInfo="paramInfo" />
     </scroll>
   </div>
 </template>
@@ -16,10 +17,11 @@
   import DetailInfo from './detailChild/DetailInfo'
   import DetailShop from './detailChild/DetailShop'
   import DetailShopImg from './detailChild/DetailShopImg'
+  import DetailParam from './detailChild/DetailParam'
 
   import Scroll from 'components/common/scroll/Scroll'
 
-  import {getDetail,Goods,Shop} from 'network/detail'
+  import {getDetail,Goods,Shop,ParamInfo} from 'network/detail'
 
   export default {
     name: 'Detail',
@@ -29,7 +31,8 @@
         banners: [],
         goodsInfo: {},
         shopInfo: {},
-        goodsImages: {}
+        goodsImages: {},
+        paramInfo: {}
       }
     },
     components: {
@@ -38,7 +41,8 @@
       DetailInfo,
       DetailShop,
       Scroll,
-      DetailShopImg
+      DetailShopImg,
+      DetailParam
     },
     /* 由于detail组件也在home组件中，而home组件使用了keep-alive不会被销毁，所以detail不会再次创建,里面的数据得不到更新，所以要在keep-alive中用exclude方法把Detail组件排除在外 */
     created () {
@@ -56,12 +60,13 @@
         this.shopInfo = new Shop(data.shopInfo);
         // 商品图片数据
         this.goodsImages = data.detailInfo;
+        // 商品参数数据
+        this.paramInfo = new ParamInfo(data.itemParams.info, data.itemParams.rule);
       })
     },
     methods: {
       imgLoad() {
         this.$refs.scroll.refresh();
-        console.log('aa')
       }
     }
   }
