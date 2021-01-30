@@ -37,3 +37,13 @@ export class ParamInfo {
     this.tables = rule.tables[0]
   }
 }
+
+export class Comment {
+  constructor(list) {
+    this.userName = list.user.uname,
+    this.avatar = list.user.avatar,
+    this.userImg = list.images,
+    this.content = list.content,
+    this.style = list.style
+  }
+}
