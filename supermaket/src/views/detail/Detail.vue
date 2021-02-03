@@ -1,13 +1,15 @@
 <template>
   <div id="goods-detail">
-    <detail-nav-bar :title="['商品','参数','评论','推荐']" />
-    <scroll :probeType='3' :pullUpLoad='true' ref="scroll">
+    <detail-nav-bar :title="['商品','参数','评论','推荐']" @navClick="navClick" ref="navBar"/>
+    <scroll :probeType='3' :pullUpLoad='true' ref="scroll" @scrollTo="scrollTo">
       <detail-banner :banners="banners" />
       <detail-info :goodsInfo="goodsInfo" />
       <detail-shop :shopInfo="shopInfo" />
       <detail-shop-img :goodsImages="goodsImages" @imgLoad="imgLoad"/>
-      <detail-param :paramInfo="paramInfo" />
-      <detail-comment :comment="comment" />
+      <detail-param :paramInfo="paramInfo" ref="param" />
+      <detail-comment :comment="comment" :commentIsNo="commentIsNo" ref="comment" />
+      <goods-list :goods="recommends" ref="recommends" />
+      <p class="detail-bottom">~没有更多了~</p>
     </scroll>
   </div>
 </template>
@@ -21,9 +23,10 @@
   import DetailParam from './detailChild/DetailParam'
   import DetailComment from './detailChild/DetailComment'
 
+  import GoodsList from 'components/content/goods/GoodsList'
   import Scroll from 'components/common/scroll/Scroll'
 
-  import {getDetail,Goods,Shop,ParamInfo,Comment} from 'network/detail'
+  import {getDetail,getRecommend,Goods,Shop,ParamInfo,Comment} from 'network/detail'
 
   export default {
     name: 'Detail',
@@ -35,7 +38,11 @@
         shopInfo: {},
         goodsImages: {},
         paramInfo: {},
-        comment: {}
+        comment: {},
+        commentIsNo: null,
+        recommends: [],
+        scrollToY: [],
+        navBarIndex: null
       }
     },
     components: {
@@ -46,14 +53,14 @@
       DetailShopImg,
       DetailParam,
       DetailComment,
+      GoodsList,
       Scroll
     },
     /* 由于detail组件也在home组件中，而home组件使用了keep-alive不会被销毁，所以detail不会再次创建,里面的数据得不到更新，所以要在keep-alive中用exclude方法把Detail组件排除在外 */
     created () {
-      this.iid = this.$route.params.iid;
+      this.iid = this.$route.query.iid;
       // 根据商品的iid发送请求，获取数据
       getDetail(this.iid).then(res => {
-        console.log(res);
         const data = res.result;
         // 将请求到的数据抽离出来
         // 轮播图数据
@@ -66,13 +73,41 @@
         this.goodsImages = data.detailInfo;
         // 商品参数数据
         this.paramInfo = new ParamInfo(data.itemParams.info, data.itemParams.rule);
-        // 商品评论数据
-        this.comment = new Comment(data.rate.list[0]);
+        // 商品评论数据(先判断是否有评论)
+        if(data.rate.cRate !== 0) {
+          this.comment = new Comment(data.rate.list[0]);
+          this.commentIsNo = true;
+        }
+      })
+
+      getRecommend().then(res => {
+        this.recommends = res.data.list;
       })
     },
     methods: {
       imgLoad() {
+        // 加载完图片刷新一下scroll对象，重新计算可滚动高度
         this.$refs.scroll.refresh();
+        // 加载完图片将各个模块的offSetTop保存下来
+        this.scrollToY = [];
+        this.scrollToY.push(0);
+        this.scrollToY.push(-this.$refs.param.$el.offsetTop);
+        this.scrollToY.push(-this.$refs.comment.$el.offsetTop);
+        this.scrollToY.push(-this.$refs.recommends.$el.offsetTop);
+        this.scrollToY.push(-Number.MAX_VALUE);
+      },
+      navClick(index) {
+        if(this.scrollToY.length > 0) {
+          this.$refs.scroll.scrollToTop(0, this.scrollToY[index]);
+        }
+      },
+      scrollTo(position) {
+        for(let i = 0;i < this.scrollToY.length-1;i++) {
+          // 判断滚动的距离在那个区间, 并且避免频繁赋值
+          if(this.navBarIndex !== i && (position.y <= this.scrollToY[i] && position.y>this.scrollToY[i+1])) {
+            this.$refs.navBar.currentIndex = this.navBarIndex = i;
+          }
+        }
       }
     }
   }
@@ -89,5 +124,10 @@
   .wrapper{
     height: calc(100vh - 44px);
     overflow: hidden;
+  }
+
+  .detail-bottom {
+    padding: 10px 0;
+    text-align: center;
   }
 </style>

@@ -38,6 +38,8 @@
       },
       navClick(index) {
         this.currentIndex = index;
+        // 传出导航点击事件
+        this.$emit('navClick', index);
       }
     }
   }

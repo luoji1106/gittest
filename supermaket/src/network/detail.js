@@ -9,6 +9,12 @@ export function getDetail(iid) {
   })
 }
 
+export function getRecommend() {
+  return axiosRequest({
+    url: '/recommend'
+  })
+}
+
 export class Goods {
   constructor(itemInfo, columns, shopInfo) {
     this.title = itemInfo.title,
@@ -44,6 +50,7 @@ export class Comment {
     this.avatar = list.user.avatar,
     this.userImg = list.images,
     this.content = list.content,
+    this.time = list.created,
     this.style = list.style
   }
 }

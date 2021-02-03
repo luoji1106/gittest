@@ -29,7 +29,7 @@
 
 <style scoped>
   .param-info {
-    padding: 20px 10px 0px;
+    padding: 20px 10px;
     box-shadow: 0px 3px rgba(111,111,111,.2);
     margin-bottom: 3px;
   }
