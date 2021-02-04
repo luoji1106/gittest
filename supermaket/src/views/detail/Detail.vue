@@ -11,6 +11,8 @@
       <goods-list :goods="recommends" ref="recommends" />
       <p class="detail-bottom">~没有更多了~</p>
     </scroll>
+    <scroll-to @click.native="topClick" v-show="toTopIsShow"/>
+    <detail-bottom-bar @cartClick="cartClick" />
   </div>
 </template>
 
@@ -22,11 +24,14 @@
   import DetailShopImg from './detailChild/DetailShopImg'
   import DetailParam from './detailChild/DetailParam'
   import DetailComment from './detailChild/DetailComment'
+  import DetailBottomBar from './detailChild/DetailBottomBar'
 
   import GoodsList from 'components/content/goods/GoodsList'
   import Scroll from 'components/common/scroll/Scroll'
 
   import {getDetail,getRecommend,Goods,Shop,ParamInfo,Comment} from 'network/detail'
+
+  import {scrollTo} from 'common/mixin'
 
   export default {
     name: 'Detail',
@@ -53,9 +58,11 @@
       DetailShopImg,
       DetailParam,
       DetailComment,
+      DetailBottomBar,
       GoodsList,
       Scroll
     },
+    mixins: [scrollTo],
     /* 由于detail组件也在home组件中，而home组件使用了keep-alive不会被销毁，所以detail不会再次创建,里面的数据得不到更新，所以要在keep-alive中用exclude方法把Detail组件排除在外 */
     created () {
       this.iid = this.$route.query.iid;
@@ -79,7 +86,7 @@
           this.commentIsNo = true;
         }
       })
-
+      // 请求推荐商品数据
       getRecommend().then(res => {
         this.recommends = res.data.list;
       })
@@ -108,6 +115,19 @@
             this.$refs.navBar.currentIndex = this.navBarIndex = i;
           }
         }
+
+        // 监听滚动距离判断是否显示'返回顶部按钮'
+        this.toTopIsShow = (-position.y) > 1000;
+      },
+      cartClick() {
+        const product = {};
+        product.iid = this.iid;
+        product.image = this.banners[0];
+        product.title = this.goodsInfo.title;
+        product.desc = this.goodsImages.desc;
+        product.price = this.goodsInfo.cartPrice;
+
+        this.$store.commit('addCart', product);
       }
     }
   }
@@ -122,7 +142,7 @@
   }
 
   .wrapper{
-    height: calc(100vh - 44px);
+    height: calc(100vh - 44px - 49px);
     overflow: hidden;
   }
 

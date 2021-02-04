@@ -20,6 +20,7 @@ export class Goods {
     this.title = itemInfo.title,
     this.price = itemInfo.price,
     this.oldPrice = itemInfo.oldPrice,
+    this.cartPrice = itemInfo.lowNowPrice,
     this.discount = itemInfo.discountDesc,
     this.discountBgColor = itemInfo.discountBgColor,
     this.columns = columns,

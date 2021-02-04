@@ -19,13 +19,14 @@
   import TabControl from 'components/content/tabcontrol/TabControl'
   import GoodsList from 'components/content/goods/GoodsList'
   import Scroll from 'components/common/scroll/Scroll'
-  import ScrollTo from 'components/content/scrollto/ScrollTo'
 
   import HomeBanner from './homeChild/HomeBanner'
   import HomeRecommend from './homeChild/HomeRecommend'
   import Feature from './homeChild/Feature'
 
   import {getHomeMultidata, getHomeGoods} from 'network/home'
+
+  import {scrollTo} from 'common/mixin'
 
   export default {
     name: 'Home',
@@ -39,7 +40,6 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
-        toTopIsShow: false,
         controlOffsetTop: null,
         controlIsFixed: false,
         homeScroll: 0,
@@ -50,11 +50,12 @@
       TabControl,
       GoodsList,
       Scroll,
-      ScrollTo,
       HomeBanner,
       HomeRecommend,
       Feature
     },
+    /* 混入 mixin */
+    mixins: [scrollTo],
     created () {
       // 请求轮播图及相关数据
       this.HomeMultidata()
@@ -109,9 +110,6 @@
       },
 
       /* 页面滚动设置相关方法 */
-      topClick() {
-        this.$refs.scroll.scrollToTop(0, 0);
-      },
       bannerImgLoad() {
         // 获取选项卡距离父元素顶部的距离，并保存下来
         this.controlOffsetTop = this.$refs.tabControl.$el.offsetTop
