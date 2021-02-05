@@ -127,7 +127,7 @@
         product.desc = this.goodsImages.desc;
         product.price = this.goodsInfo.cartPrice;
 
-        this.$store.commit('addCart', product);
+        this.$store.dispatch('collectCart', product);
       }
     }
   }
