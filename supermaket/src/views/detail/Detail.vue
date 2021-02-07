@@ -1,7 +1,7 @@
 <template>
   <div id="goods-detail">
     <detail-nav-bar :title="['商品','参数','评论','推荐']" @navClick="navClick" ref="navBar"/>
-    <scroll :probeType='3' :pullUpLoad='true' ref="scroll" @scrollTo="scrollTo">
+    <scroll :probeType='3' ref="scroll" @scrollTo="scrollTo">
       <detail-banner :banners="banners" />
       <detail-info :goodsInfo="goodsInfo" />
       <detail-shop :shopInfo="shopInfo" />
