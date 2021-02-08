@@ -1,6 +1,6 @@
 <template>
   <div>
-     <img :src="findImg">
+     <img v-lazy="findImg">
       <div class="goods-info">
         <p class="title">{{message.title}}</p>
         <p>

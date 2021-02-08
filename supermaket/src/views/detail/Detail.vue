@@ -127,7 +127,10 @@
         product.desc = this.goodsImages.desc;
         product.price = this.goodsInfo.cartPrice;
 
-        this.$store.dispatch('collectCart', product);
+        this.$store.dispatch('collectCart', product).then(res => {
+          // 添加成功显示弹窗，并提示添加成功
+          this.$popup.show(res, 2500);
+        })
       }
     }
   }

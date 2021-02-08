@@ -7,7 +7,7 @@
     <div class="price-all">
       <p>合计：<span>￥{{priceAll}}</span></p>
     </div>
-    <div class="Clearing">去结算({{cartLength}})</div>
+    <div class="Clearing" @click="ClearingClick">去结算({{cartLength}})</div>
   </div>
 </template>
 
@@ -27,7 +27,7 @@
         // 塞选出复选框为选中状态的商品，并计算出价钱的总和
         return this.getCartList.filter(item => item.isCheck).reduce((total, value) => {
           return total + value.price * value.count;
-        },0);
+        },0).toFixed(2);
       },
       cartLength() {
         return this.getCartList.filter(item => item.isCheck).length;
@@ -45,6 +45,11 @@
           this.getCartList.forEach(item => item.isCheck = false);
         }else {
           this.getCartList.forEach(item => item.isCheck = true);
+        }
+      },
+      ClearingClick() {
+        if(this.cartLength == 0) {
+          this.$popup.show('请选择商品')
         }
       }
     }
